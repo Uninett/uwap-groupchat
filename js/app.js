@@ -4,11 +4,11 @@ var UC = Ember.Application.create ({
 		
 	},
 	startLoop: function(){
-		setInterval("UC.getMSG()", 10000);
+		setInterval("UC.getMSG()", 3000);
 		setInterval("prettyPrint()", 1000);
-		setInterval("UC.updateParticipants()", 10000);
-		setInterval("UC.participate()", 7000);
-		setInterval("UC.getStoredCalendars()", 10000);
+		setInterval("UC.updateParticipants()", 5000);
+		setInterval("UC.participate()", 3000);
+		setInterval("UC.getStoredCalendars()", 3000);
 //		setInterval("try {$('#chatoutput')[0].tinyscrollbar();}catch(err){console.log(err);}", 1000);
 	},
 	getMSG: function(){
