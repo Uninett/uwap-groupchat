@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>UNIchat</title>
+
+	<style>
+body {
+	font-family: "Lucida Grande";
+}
+
+a {
+	color: #555;
+	text-decoration: none;
+}
+
+div#out p {
+	color: #555;
+}
+
+dl dd {
+	
+}
+
+div#chatoutput p {
+	margin: 5px;
+	border-top: 1px solid #ccc;
+	padding: 4px;
+}
+
+div#chatcontainer {
+	position: relative;
+}
+
+div#chatoutput {
+	height: 100%;
+	width: 100%;
+	overflow: auto;
+	/* 			position: absolute; */
+	/* 			left:0; */
+	/* 			vertical-align: bottom; */
+	/* 			float:left; */
+}
+/* 		div#chatoutput-content{ */
+/* 			position: absolute; */
+/* 			bottom:0; */
+/* 			left:0; */
+/* 		} */
+.blue {
+	color: #4AA;
+}
+
+.orange {
+	color: #A44;
+}
+
+.green {
+	color: #4A4;
+}
+
+.codeinput {
+ 	-webkit-box-sizing: border-box; 
+ 	-moz-box-sizing: border-box;
+ 	box-sizing: border-box; 
+	/*             width:85%; */
+}
+
+input#usernameinput {
+	width: 90%;
+}
+
+input {
+	vertical-align: center;
+}
+
+div#user {
+	vertical-align: middle;
+}
+
+div#status_container {
+	vertical-align: middle;
+}
+
+input#usernameinput {
+	display: inline;
+	vertical-align: middle;
+}
+
+input#statusinput {
+	vertical-align: middle;
+}
+
+html,body {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	overflow: hidden;
+}
+
+.one_line {
+	white-space: nowrap;
+	overflow: hidden;
+	padding-top: 5px;
+	padding-left: 5px;
+	text-align: left !important;
+}
+
+input#progchooser {
+	width: 40px;
+	height: 12px
+}
+.dhx_matrix_scell{
+	background-color: #AEBADA;
+}
+button#weatherbutton{
+	
+	
+}
+.codemsg {
+	background-color: #FFF;
+	border: 0px solid #FFF;
+	padding: 0px;
+}
+</style>
+
+    
+    
+    <script type="text/x-handlebars" data-template-name="roomlistview">
+	{{#each UC.Rooms.rooms }}
+		<li class="icn_view_users"><a href="javascript:void(0)" {{action "changeRoom"}}>{{createRoom}}</a></li>
+       
+	{{/each}}
+    </script>
+    
+    
+    <script type="text/x-handlebars" data-template-name="chatview">
+	
+	{{#each UC.Messages.current}}
+		
+		<span style="color: #999">{{createTop}}</span> 
+		{{#if nickChange}} 
+		{{else}}
+		{{#if statusChange}} 
+		{{else}}
+		{{#if tweet}}<p>{{text}} </p>
+		{{else}}
+		{{#if isCode}}<p> {{code msg}} </p>
+		{{else}}
+		{{#if showHelp}}<p> {{{help}}} </p>
+		{{else}}
+		{{#if showImage}}<p> {{imageHelper}} </p>
+		{{else}}
+		{{#if isImageURL}}<p> {{imageurlhelper}} </p>
+		{{else}}
+		{{#if isImageFile}}<p> {{imagefile}} </p>
+		{{else}}
+		{{#if codeInput}}<p> {{textarea}} </p>
+		{{else}}
+		<p> {{{msg}}} </p>
+		{{/if}}
+		{{/if}}
+		{{/if}}
+		{{/if}}
+		{{/if}}
+		{{/if}}
+        {{/if}}
+        {{/if}}
+		{{/if}}
+		
+		{{#if currentRoom}}
+      	<p>[{{timestamp}}]
+		{{#if nickChange}} <b> {{old}} is now known as {{new}} </b>
+		{{else}}
+		{{#if statusChange}} <b> {{nick}} has changed his status to {{new}} </b>
+		{{else}}
+		{{#if tweet}} (Tweet) [{{from_user}}]: {{text}} 
+		{{else}}
+		<span style="color: #999"> [{{nick}}]: </span> {{msg}} </p>
+		{{/if}}
+		{{/if}}
+		{{/if}}
+		{{/if}}
+		<br />
+	{{/each}}
+{{fixScroll}}
+		
+    </script>
+    
+    <script type="text/x-handlebars" data-template-name="participantsview">
+	
+	{{#each UC.Participants.participants}}
+		{{partisan}}
+	{{/each}}
+	
+    </script>
+    <script type="text/x-handlebars" data-template-name="participantsnumber">
+	
+	{{numberofparticipants}}
+	
+    </script>
+    
+    
+    <script type="text/x-handlebars" data-template-name="roomnameview">
+	<b> {{UC.CurrentRoom.name}}</b>
+    </script>
+
+
+	<!-- JQuery hosted by Google -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+	<!-- Core API to UNINETT WebApp Park -->
+	
+	<script type="text/javascript" src="/_/js/core.js"></script>
+	
+	
+	<script src="js/lib/jquery.mousewheel.min.js"></script>
+	<script src="js/lib/jquery.mCustomScrollbar.js"></script>
+	
+	<script type="text/javascript" src="js/lib/ember-0.9.8.1.min.js"></script>
+	<script type="text/javascript" src="js/lib/core.js"></script>
+	
+	<script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/lib/bootstrap-dropdown.js"></script>
+	
+	
+	<script type="text/javascript" src="js/lib/bootstrap-button.js"></script>
+	
+	<script type="text/javascript" src="js/lib/moment.min.js"></script>
+	<script type="text/javascript" src="js/lib/filedrag.js"></script>
+	
+	<script type="text/javascript" src="js/lib/underscore-min.js"></script>
+	
+	<script type="text/javascript" src="js/lib/dhtmlxscheduler.js"></script>
+	<script type="text/javascript" src="js/lib/dhtmlxscheduler_timeline.js"></script>
+	<script type="text/javascript" src="js/lib/dhtmlxscheduler_treetimeline.js"></script>
+	
+	<script type="text/javascript" src="js/google-code-prettify/prettify.js"></script>
+	
+	
+	<script type="text/javascript" src="js/app.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+	
+	<link rel="stylesheet" href="css/layout.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="css/chat.css" type="text/css" media="screen" />
+	
+	<link rel="stylesheet" href="css/dhtmlxscheduler_glossy.css" type="text/css" media="screen" />
+	
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="css/bootstrap-responsive.min.css" type="text/css" media="screen" />
+	<link href="css/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="js/google-code-prettify/prettify.css" type="text/css" media="screen" />
+	<!--[if lt IE 9]>
+	<link rel="stylesheet" href="css/ie.css" type="text/css" media="screen" />
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	
+	
+
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+
+		});
+
+	</script>
+	
+	<script type="text/javascript"> 
+
+ 
+</script>
+	
+	
+	
+	
+	
+</head>
+
+<body style="padding: 3em; background: #ddd">
+	<header id="header">
+		<hgroup>
+			<h1 class="site_title"><a href="index.html">Foodle Chat</a></h1>
+			<h2 class="section_title">Identitetshåndterinsgruppa</h2><div class="btn_view_site"><a href="http://www.medialoot.com">View Site</a></div>
+		</hgroup>
+	</header> <!-- end of header bar -->
+	
+	<section id="secondary_bar">
+		<div class="user" style="display:table-cell; vertical-align: middle; ">
+			<p class="user_username" id="username" style="display:table-cell; vertical-align: middle;"><input align="middle" width="100px" style="display:table-cell; vertical-align:middle; background-color:#DDD; " id="usernameinput" value="enter nick" onchange="UC.nickChanged(this.value); "></input></p>
+			
+			<!-- <a class="logout_user" href="#" title="Logout">Logout</a> -->
+		</div>
+		<div class="breadcrumbs_container">
+			<article class="breadcrumbs"><a href="#" onclick="UC.CurrentRoom.set('name', 'All'); UC.CurrentRoom.set('ident', 'all'); UC.getMSG();" >Chat</a> <div class="breadcrumb_divider"></div> </article>
+		
+		<div class="status_container" align="right" style="vertical-align:middle; padding-top:4px;">Status: <input id="statusinput" style="background-color: #DDD;" value="active" onchange="UC.statusChanged(this.value);  "></input></div>
+		</div>
+		
+	</section><!-- end of secondary bar -->
+	
+	<aside id="sidebar" class="column">
+<!-- 		<form class="quick_search">
+			<input type="text" value="Quick Search" onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
+		</form>
+		<hr/> -->
+		<h3>Rooms</h3>
+		<ul class="roomlist toggle">
+<!-- 			<li class="icn_view_users"><a href="#">Identitetshåndteringsuppa</a></li>
+			<li class="icn_view_users"><a href="#">UNINETT</a></li>
+			<li class="icn_view_users"><a href="#">GEANT</a></li>
+			<li class="icn_view_users"><a href="#">VOOT</a></li> -->
+		</ul>
+<!-- 		<button id="twitterbutton" onclick="UWAP.data.get('http://api.twitter.com/1/statuses/home_timeline.json?include_entities=true', {handler: 'twitter'}, function(d){console.log(d);}, function(err){console.log(err)});">Twittertest</button> -->
+<!-- 		<button id="picasabutton" onclick="UWAP.data.get('https://picasaweb.google.com/data/feed/api/user/default?v=2', {handler: 'picasa', xml: 1  }, function(d){console.log('picasa: '); console.log(d);}, function(err){console.log(err);});">Picasatest</button> -->
+		<footer>
+			<hr />
+			<!-- <p>Andreas Åkre Solberg &copy; <strong><a href="http://www.uninett.no">UNINETT</a></strong> 2012 </p>-->
+			<p>Theme by <a href="http://www.medialoot.com">Medialoot</a></p>
+		</footer>
+	</aside><!-- end of sidebar -->
+	
+	<section id="main" class="column" >
+		
+<!-- 		<h4 class="alert_info">Welcome to the free MediaLoot admin panel template, this could be an informative message.</h4>
+		<h4 class="alert_warning">A Warning Alert</h4>
+		<h4 class="alert_error">An Error Message</h4>
+		<h4 class="alert_success">A Success Message</h4> -->
+
+
+		<div id="rooms" class="nospace">
+
+		</div>
+
+
+
+		<div class="clear"></div>
+
+	<div class="row-fluid" id="mainBox">
+		<article class="module width_3_quarter" >
+				<header><h3 id="msgHead">Messages</h3></header>
+			<div class="message_list" style="height: 600px" id="chatoutput">
+				<div class="messages module_content"></div>
+			</div>
+			<div id="scheduler_here" class="dhx_cal_container"
+				style='width: 100%; height: 100%; background-color: #bfcbeb; '>
+				<div class="dhx_cal_navline" style="background-color: #FFF">
+					<div class="dhx_cal_prev_button">&nbsp;</div>
+					<div class="dhx_cal_next_button">&nbsp;</div>
+					<div class="dhx_cal_today_button"></div>
+					<div class="dhx_cal_date"></div>
+					<div class="dhx_cal_tab" name="day_tab" style="right: 204px;"></div>
+					<div class="dhx_cal_tab" name="week_tab" style="right: 140px;"></div>
+
+					<div class="dhx_cal_tab" name="timeline_tab" style="right: 280px;"></div>
+					<div class="dhx_cal_tab" name="month_tab" style="right: 76px;"></div>
+				</div>
+				<div class="dhx_cal_header"></div>
+				<div class="dhx_cal_data"></div>
+			</div>
+			
+			
+			<footer>
+				<div class="row-fluid" id="bottomchat" style="background-color: #DDD; background-repeat: repeat; ">
+					<div class="span12" align="center" vertical-align="middle" style="vertical-align: middle; background-repeat: repeat;">
+						<button id="scheduleToggler" onclick="UC.toggleScheduler(this)" class="btn" style="height:28px; width:28px; padding: 0px; float: left; " data-toggle="button"><img src="images/calendar.png"></img></button>
+						
+						<div class="btn-group dropup" align="center" style="float: left; padding: 0px;">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style=" padding-top: 1px; padding-bottom: 1px;">
+								<img id="msgSelImg" src="images/comments.png" height="24px"
+								width="24px"></img> <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<!-- dropdown menu links -->
+								<li><a href="javascript:void(0)"
+									onclick="UC.msgBoxChange('message');"> <img id="msgSelImg1"
+										src="images/comments.png" height="16px" width="16px"></img>Message
+								</a></li>
+								<li><a href="javascript:void(0)"
+									onclick="UC.msgBoxChange('code');"> <img id="msgSelImg2"
+										src="images/page_mysql.png" height="16px" width="16px"></img>Code
+								</a></li>
+								<li><a href="javascript:void(0)"
+									onclick="UC.msgBoxChange('tweet');"> <img id="msgSelImg3"
+										src="images/twitter-bird-light-bgs.png" height="16px"
+										width="16px"></img>Tweet
+								</a></li>
+
+								<li><a href="javascript:void(0)"
+									onclick="UC.msgBoxChange('imageurl');"> <img
+										id="msgSelImg4" src="images/computer_desktop.png"
+										height="16px" width="16px"></img>Image(url)
+								</a></li>
+								<li><a href="javascript:void(0)"
+									onclick="UC.msgBoxChange('imagefile');"> <img
+										id="msgSelImg4" src="images/computer_desktop.png"
+										height="16px" width="16px"></img>Image(file)
+								</a></li>
+
+							</ul>
+						</div>
+						<div  id="inputter" style="overflow:hidden;">
+						<input
+							style="border-radius: 5px; border: 1px solid #ccc; width:97%%; font-size: 110%"
+							type="text" id="chatmsg" name="chatmsg"
+							onchange="UC.msgInputted(this.value)" value="" style="" />
+
+					</div>
+
+					</div>
+					
+					
+					<div>
+						<div id="filedrag"></div>
+					</div>
+					<div id="messages"></div>
+				</div>
+			</footer>
+		</article>
+		<article class="module width_quarter" ><header><h3>Participants</h3></header>
+		<div style="height: 600px" id="participants"><div class="module_content participants"></div></div>
+		<footer><div class="module_content" ><p><strong><span class="participantCount"></span></strong></p></div></footer>
+	</article>
+	</div>
+	</section>
+	</body>
+</html>
+
+
+
+
+
+
+
+
