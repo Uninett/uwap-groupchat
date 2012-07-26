@@ -225,19 +225,11 @@ $("document").ready(function() {
 		userScroll = false;
 	}); 
 
-	// detect browser/user scroll
-//	$(document).scroll( function(){  
-//		console.log('Scroll initiated by ' + (userScroll == true ? "user" : "browser"));
-//	});
-	
-	
 	
 	
 	var tempScrollTop =0;
 	var currentScrollTop = 0;
 	$("div#chatoutput").scroll(function(event){
-//		console.log(event);
-//		console.log(userScroll);
 		var scEl = $("#chatoutput")[0];
 		if(!UC.AutoScroll){
 			UC.ScrollBottom = false;
@@ -248,10 +240,8 @@ $("document").ready(function() {
 		}
 		UC.AutoScroll = false;
 		currentScrollTop = scEl.scrollTop;
-//		console.log('top: '+scEl.scrollTop+', height: '+scEl.scrollHeight+' and offsetheight: '+scEl.offsetHeight);
 		if( scEl.scrollTop >= (scEl.scrollHeight - scEl.offsetHeight))
 		{
-//			console.log('scroll is at the bottom');
 			UC.ScrollBottom = true;
 		}
 		if (tempScrollTop < currentScrollTop ){}
@@ -261,14 +251,11 @@ $("document").ready(function() {
 		else{
 			
 		}
-//		console.log(tempScrollTop+' scrollto '+currentScrollTop+' scrollHeight:'+$("#chatoutput")[0].scrollHeight);
 		tempScrollTop = currentScrollTop;
 		
 	});
 	filedrag();
 	
-//	$('.nav-tabs').button();
-//	$('.btn').button('toggle');
 
 });
 UC.ShowingSchedule = false;
@@ -283,31 +270,19 @@ Handlebars.registerHelper('link', function(text, url) {
 });
 
 Handlebars.registerHelper('code', function(msg) {
-//	  console.log(this.msg);
-//	  code= code.toString();
 	  msg = Handlebars.Utils.escapeExpression(this.msg);
-//	  url  = Handlebars.Utils.escapeExpression(url);
 
 	  var result = '<pre class="prettyprint codemsg">' + msg + '</pre>';
 
 	  return new Handlebars.SafeString(result);
 });
 Handlebars.registerHelper('imageHelper', function() {
-//	  console.log(this.msg);
-//	  code= code.toString();
-//	  msg = Handlebars.Utils.escapeExpression(this.msg);
-//	  url  = Handlebars.Utils.escapeExpression(url);
-
 	  var result = '<img class="uploadimg" src="'+this.image+'"></img>';
 
 	  return new Handlebars.SafeString(result);
 });
 
 Handlebars.registerHelper('textarea', function() {
-//	  console.log(this.msg);
-//	  code= code.toString();
-//	  msg = Handlebars.Utils.escapeExpression(this.msg);
-//	  url  = Handlebars.Utils.escapeExpression(url);
 
 	  var result = '<textarea rows="5" cols="100%" class="codeinputarea" onchange="UC.msgInputted(\'/code"+this+"\')"></textarea>';
 
@@ -316,10 +291,7 @@ Handlebars.registerHelper('textarea', function() {
 
 Handlebars.registerHelper('partisan', function(){
 	var result = new Handlebars.SafeString(this);
-//	console.log(UC.Participants.current);
-//	console.log(result.toString());
 	var tempInt = $.inArray(result.toString(), UC.Participants.current);
-//	console.log(tempInt);
 	UC.updatePartNO();
 	if(tempInt>-1 || UC.CurrentRoom.ident == 'all'){
 		tempInt = $.inArray(result.toString(), UC.Participants.participants);
@@ -402,7 +374,6 @@ Handlebars.registerHelper('createTop', function(){
 		result+='<image height="20px" width="20px" src="images/shield.png"></image><b>'+this.nick+' has changed his status to '+this.new +'</b>';
 
 		if(UC.CurrentRoom.ident == 'all'){
-//			result+=' in '+UC.getRoomNames(this['uwap-acl-read']).join(', ');
 
 		}
 		else{
@@ -435,18 +406,15 @@ Handlebars.registerHelper('createTop', function(){
 		}
 		result+='<span style="float:right;">'+UC.getTimeAgo(this.timestamp)+'</span><br />';
 	}
-	//need icons for: chat, tweet, code, image, status/nick change, picasa
-	//has: twitter-bird-light-bgs.png from twitter.com, and shield.png comment.png,page_mysql.png page_javascript.png, computer_desktop.png comments.png from findicons.com, 
+	//twitter-bird-light-bgs.png from twitter.com, and shield.png comment.png,page_mysql.png page_javascript.png, computer_desktop.png comments.png from findicons.com, 
 	return new Handlebars.SafeString(result);
 });
 Handlebars.registerHelper('createRoom', function(){
 	var result = '';
-//	console.log('creating sidebar-room: '+this.ident);
 	if(this.ident == UC.CurrentRoom.ident){
 		result+='<span ><b>'+this.name+'</b></span>';
 	}
 	else if(UC.hasUnread(this.ident)){
-//		console.log('hasUnread 2.0: '+this.ident);
 		result+='<span  class="green">'+this.name+'</span>';
 	}
 	else{

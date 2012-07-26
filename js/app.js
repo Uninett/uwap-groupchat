@@ -733,64 +733,39 @@ var UC = Ember.Application.create ({
 		];
 		
 		scheduler.init('scheduler_here',new Date(),"timeline");
-		
-//		scheduler.attachEvent("onEventSave", function(event_id,event_object){
-//			var tempEvent = {};
-//			tempEvent.end = moment(event_object.end_date.toString()).format("YYYY-MM-DD HH:mm:ss");
-//			tempEvent.start = moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss");
-//			tempEvent.id = event_object.id;
-//			tempEvent.text = event_object.text;	event_object.start_date = moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss");
-//			console.log(tempEvent);
-//			UC.saveEvent(tempEvent);
-//			return true;
-//		});
-////		scheduler.attachEvent("onEventDeleted", function(event_id){
-//			console.log(event_id);
-//			UWAP.store.remove({ "event.id": event_id}, function(){ console.log('event removed from db');},
-//					function(err){console.log(err);});
-//		});
 		  scheduler.attachEvent("onBeforeEventDelete", function(event_id,event_object){
-              //any custom logic here
-//			  console.log(event_object);
-//			  console.log({"event.end":moment(event_object.end_date.toString()).format("YYYY-MM-DD HH:mm:ss"), "event.start": moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss"), "event.text": event_object.text });
-			  UWAP.store.remove({"event.end":moment(event_object.end_date.toString()).format("YYYY-MM-DD HH:mm:ss"), "event.start": moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss")}, //, "event.text": event_object.text },
+                UWAP.store.remove({"event.end":moment(event_object.end_date.toString()).format("YYYY-MM-DD HH:mm:ss"), "event.start": moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss")}, //, "event.text": event_object.text },
 					  function(){console.log('event removed');}, function(err){console.log(err);});
 			  return true;
 		  });
-//		  scheduler.attachEvent("onEventChanged", function(event_id,event_object){
-//              //any custom logic here
-//			  UWAP.store.remove({"event.end":moment(event_object.end_date.toString()).format("YYYY-MM-DD HH:mm:ss"), "event.start": moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss")}, //, "event.text": event_object.text },
-//					  function(){console.log('event removed...add new');
-//			  			}, function(err){console.log(err);});
-//			  var tempEvent = {};
-//			  tempEvent.end = moment(event_object.end_date.toString()).format("YYYY-MM-DD HH:mm:ss");
-//				tempEvent.start = moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss");
-//				tempEvent.id = event_object.id;
-//				tempEvent.text = event_object.text;	event_object.start_date = moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss");
-//				console.log(tempEvent);
-//				UC.saveEvent(tempEvent);
-//				return true;
-//		  });
-		  scheduler.attachEvent("onBeforeEventChanged", function(event_object, native_event, is_new){
-		       //any custom logic here
-//			  console.log(is_new);
-//			  console.log(native_event);
-			  
-			  if(is_new){
-				  
-			  }
-			  else{
-				  UWAP.store.remove({"event.end":moment(event_object.end_date.toString()).format("YYYY-MM-DD HH:mm:ss"), "event.start": moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss")}, //, "event.text": event_object.text },
-						  function(){console.log('event removed');}, function(err){console.log(err);});
-				  
-			  }
+		  scheduler.attachEvent("onEventSave",function(id,data,is_new_event){
+			  var event_object = data;
 			  var tempEvent = {};
 				tempEvent.end = moment(event_object.end_date.toString()).format("YYYY-MM-DD HH:mm:ss");
 				tempEvent.start = moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss");
 				tempEvent.id = event_object.id;
 				tempEvent.text = event_object.text;	event_object.start_date = moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss");
 				console.log(tempEvent);
-				UC.saveEvent(tempEvent);
+				UC.saveEvent(tempEvent); 
+				return true;
+		  });
+		  scheduler.attachEvent("onBeforeEventChanged", function(event_object, native_event, is_new){
+		      			  
+			  if(is_new){
+				  
+			  }
+			  else{
+				  UWAP.store.remove({"event.end":moment(event_object.end_date.toString()).format("YYYY-MM-DD HH:mm:ss"), "event.start": moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss")}, //, "event.text": event_object.text },
+						  function(){console.log('event removed');}, function(err){console.log(err);});
+				 var tempEvent = {};
+				tempEvent.end = moment(event_object.end_date.toString()).format("YYYY-MM-DD HH:mm:ss");
+				tempEvent.start = moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss");
+				tempEvent.id = event_object.id;
+				tempEvent.text = event_object.text;	event_object.start_date = moment(event_object.start_date.toString()).format("YYYY-MM-DD HH:mm:ss");
+				console.log(tempEvent);
+				UC.saveEvent(tempEvent); 
+			  }
+			  
 		       return true;
 		  });
 		
@@ -820,18 +795,9 @@ var UC = Ember.Application.create ({
 		//===============
 		//Data loading
 		//===============
-//		scheduler.config.lightbox.sections=[	
-//			{name:"description", height:130, map_to:"text", type:"textarea" , focus:true},
-//			{name:"custom", height:23, type:"timeline", options:null , map_to:"section_id" }, //type should be the same as name of the tab
-//			{name:"time", height:72, type:"time", map_to:"auto"}
-//		];
-		
-//		scheduler.init('scheduler_here',new Date(),"timeline");
-//		console.log('scheduler inited');
 		$('.dhx_scell_level10').bind('click', function(d){console.log('change:'); console.log(d);});
 	},
 	toggleScheduler: function(toggle) {
-//		console.log(toggle);
 		if(UC.ShowingSchedule){
 			$('button#scheduleToggler').button('toggle');
 			UC.ShowingSchedule = false;
@@ -863,8 +829,6 @@ var UC = Ember.Application.create ({
 		var symbolNo;
 		var tempInt = 0;
 		_.each(d.product.time, function(pt){
-//			console.log(pt);
-//			console.log('attributes:');
 			attr = pt["@attributes"];
 			tempInt++;
 			if(pt.location.symbol  && pt.location.symbolProbability){//}["@attributes"].value<2){
